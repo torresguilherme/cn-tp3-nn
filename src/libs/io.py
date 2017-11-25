@@ -1,10 +1,10 @@
-import csv
+import numpy
 
 class Data():
     def __init__(self, filename):
-        with open(filename, "r") as csvfile:
-            csvinput = csv.reader(csvfile)
-            self.details = list(csvinput)
+        self.details = numpy.loadtxt(filename, delimiter=';', dtype=numpy.str)
+        self.X = self.details[:, 0:8].astype(numpy.float)
+        self.Y = self.details[:,8]
 
     def get_element(self, row, col):
         return self.details[row][col]
