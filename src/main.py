@@ -13,13 +13,20 @@ BATCH_SIZE = int(sys.argv[7])
 
 def main():
     train_data = Data(TRAIN_FILE)
-    
+
+    # inicializa o modelo
     model = Sequential()
     model.add(Dense(8, input_dim=8, activation=ACTIVATION_FUNC))
+    for i in train_data.Y:
+        print(i)
     for i in range(HIDDEN_LAYER_NUMBER):
         model.add(Dense(HIDDEN_LAYER_SIZE, activation=ACTIVATION_FUNC))
-    model.add(Dense(1, activation=ACTIVATION_FUNC))
+    model.add(Dense(7, activation=ACTIVATION_FUNC))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    # treina o modelo
+    model.fit(train_data.X, train_data.Y, epochs=EPOCHS, batch_size=BATCH_SIZE)
+    # valida os resultados
+    validation = model.evaluate(train_data.X, train_data.Y)
 
 if __name__ == '__main__':
     main()
