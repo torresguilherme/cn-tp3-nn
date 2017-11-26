@@ -22,15 +22,3 @@ class Data():
             elif i == 'ME3':
                 self.Y.append(6)
         self.Y = to_categorical(self.Y)
-
-    def get_element(self, row, col):
-        return self.details[row][col]
-
-    def get_line(self, row):
-        return self.details[row]
-
-    def get_details(self):
-        return self.details
-
-    def get_lenght(self):
-        return len(self.details)

@@ -17,8 +17,6 @@ def main():
     # inicializa o modelo
     model = Sequential()
     model.add(Dense(8, input_dim=8, activation=ACTIVATION_FUNC))
-    for i in train_data.Y:
-        print(i)
     for i in range(HIDDEN_LAYER_NUMBER):
         model.add(Dense(HIDDEN_LAYER_SIZE, activation=ACTIVATION_FUNC))
     model.add(Dense(7, activation=ACTIVATION_FUNC))
