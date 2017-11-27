@@ -2,11 +2,11 @@ import numpy
 from keras.utils import to_categorical
 
 class Data():
-    def __init__(self, filename):
+    def __init__(self, filename, start, end):
         self.details = numpy.loadtxt(filename, delimiter=';', dtype=numpy.str)
-        self.X = self.details[:, 0:8].astype(numpy.float)
+        self.X = self.details[start:end, 0:8].astype(numpy.float)
         self.Y = []
-        for i in self.details[:,8]:
+        for i in self.details[start:end,8]:
             if i == 'CYT':
                 self.Y.append(0)
             elif i == 'NUC':
