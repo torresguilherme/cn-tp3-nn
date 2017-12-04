@@ -6,6 +6,7 @@
 \usepackage{array}
 \usepackage{filecontents}
 \usepackage{pgfplotstable}
+\usepackage{graphicx}
 \pgfplotstableset{
   empty cells with={---},
   every head row/.style={before row=\toprule,after row=\midrule},
@@ -89,21 +90,139 @@ Ao longo das experimentações, concluiu-se que havia um momento a partir de cer
 
 Os experimentos foram realizados em um computador com sistema operacional Debian 9 unstable, 8GB de memória RAM e processador Pentium G4400 (3.3GHz). Os gráficos foram plotados usando a biblioteca matplotlib. A seguir segue a perda ao longo das iterações e a porcentagem de acurácia do modelo, avaliando-se cada um dos parâmetros.
 
-Uma coisa comum que se observa nos experimentos, entretanto, é que pode haver, durante as fases intermediárias do treino, uma diferença grande entre os acertos no grupo de treino e no grupo de validação, chegando a cerca de 12 pontos percentuais nos piores casos. Porém, isso logo é corrigido, fazendo com que a nova diferença no final das iterações esteja entre 4 e 2 pontos percentuais. Isso é um sinal de que, por mais que seja um problema de classificação complicado, não há muito overfitting nos casos de teste.
+Uma coisa comum que se observa nos experimentos, entretanto, é que pode haver, durante as fases intermediárias do treino, uma diferença grande entre os acertos no grupo de treino e no grupo de validação, chegando a cerca de 12 pontos percentuais nos piores casos. Porém, isso logo é corrigido nos experimentos que obtiveram resultados bons, fazendo com que a nova diferença no final das iterações esteja entre 4 e 2 pontos percentuais. Isso é um sinal de que, por mais que seja um problema de classificação complicado, não há muito overfitting nos casos de teste.
 
 Sabendo disso, não foram necessárias mudanças posteriores para resolver overfitting.
 
 \subsection*{Número de neurônios nas camadas escondidas}
 
+Foram feitos testes com o número de neurônios iguais a 5, 10, 15 e 30. Seguem os gráficos para cada um deles (figuras de 1 a 8)
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_1.png}
+	\caption{1 camada escondida com 5 neurônios: acurácia}
+	\label{fig:f1}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_1-1.png}
+	\caption{1 camada escondida com 5 neurônios: perda}
+	\label{fig:f11}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_2.png}
+	\caption{1 camada escondida com 10 neurônios: acurácia}
+	\label{fig:f2}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_2-2.png}
+	\caption{1 camada escondida com 10 neurônios: perda}
+	\label{fig:f21}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_3.png}
+	\caption{1 camada escondida com 15 neurônios: acurácia}
+	\label{fig:f3}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_3-2.png}
+	\caption{1 camada escondida com 15 neurônios: perda}
+	\label{fig:f31}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_4.png}
+	\caption{1 camada escondida com 30 neurônios: acurácia}
+	\label{fig:f4}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_4-2.png}
+	\caption{1 camada escondida com 30 neurônios: perda}
+	\label{fig:f41}
+\end{figure}
+
+Após analisar os gráficos, percebemos que em todos eles, os resultados para o treino são satisfatórios, porém há mudanças nos resultados para a validação. Acima de 10 camadas, os resultados para a validação são instáveis. Isso significa que, pelo menos no tempo no qual a rede foi treinada, não foi possível uma convergência para estabilizar esse conjunto. Pode-se também falar em \textit{overfitting}, nesse caso. 
+
+Nos testes posteriores, serão usados 10 neurônios nas camadas escondidas, sendo que 5 e 10 foram os resultados mais estáveis, e 10 conseguiu chegar a taxas de perda ligeiramente menores.
+
 \subsection*{Número de camadas escondidas}
 
-\subsection*{Taxa de aprendizagem}
+Nas figuras de 9 a 11, segue os gráficos da acurácia dos modelos para o número de camadas escondidas. Foram usadas 2, 6 e 10 camadas, respectivamente.
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_5.png}
+	\caption{2 camadas escondidas com 10 neurônios: acurácia}
+	\label{fig:f4}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_6.png}
+	\caption{6 camadas escondidas com 10 neurônios: acurácia}
+	\label{fig:f4}
+\end{figure}
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_5.png}
+	\caption{2 camadas escondidas com 10 neurônios: acurácia}
+	\label{fig:f4}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_6.png}
+	\caption{6 camadas escondidas com 10 neurônios: acurácia}
+	\label{fig:f4}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_7.png}
+	\caption{10 camadas escondidas com 10 neurônios: acurácia}
+	\label{fig:f4}
+\end{figure}
+
+
+Uma observação interessante sobre esses experimentos é a tendência que os resultados, à medida que o número de camadas escondidas aumenta, tendem a ficar mais instáveis e ter oscilações maiores. Isso ocorre pelo excesso de conexões que aparecem na rede: é um sinal de que ela deve ser treinada por mais gerações até que isso se estabilize. 
+
+Porém, a partir de certo ponto, usar uma rede profunda para o problema, dependendo do tamanho do espaço de treinamento, pode ser problemático. Observamos na figura 7 que, ao usar 10 camadas escondidas, sequer há uma convergência e provavelmente não haverá. Isso também se explica pelo excesso de conexões desnecessárias.
+
+Os experimentos com redes profundas, no geral, não só obtiveram os seus melhores resultados com menos camadas, como também não tiveram resultados melhores do que a rede com apenas uma camada escondida.
 
 \subsection*{Mini-batches}
 
-\subsection{Resultados e conclusão}
+Sabe-se que é possível treinar a rede usando batches, que são pequenos conjuntos de exemplos que são avaliados antes de se atualizar os pesos da rede. A abordagem por mini batches é conhecida por usar menos recursos computacionais, portanto é justo que ela seja considerada nesse trabalho também. Resultados usando batches de 2, 5 e 10 seguem nos gráficos das figuras de 12 a 14. A quantidade de épocas de treinamento foi adequada ao tamanho dos mini-batches.
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_8.png}
+	\caption{Mini-batches de tamanho 2}
+	\label{fig:f4}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_9.png}
+	\caption{Mini-batches de tamanho 5}
+	\label{fig:f4}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{exp/Figure_10.png}
+	\caption{Mini-batches de tamanho 10}
+	\label{fig:f4}
+\end{figure}
+
+Os resultados, no final, chegam a níveis semelhantes aos do algoritmo sem os batches, porém o que é notável é a velocidade na qual os exemplos com batches convergiram para o seu ponto máximo. Deve-se lembrar que todos esses experimentos foram realizados na mesma escala de tempo, porém os exemplos com batches maiores chegam a convergir para o seu estado final muito mais facilmente, agilizando o processo de treino. Por exemplo, a partir dos batches de tamanho 5, como mostra a figura 9, a rede já estava atingindo resultados satisfatórios antes da metade do fim das épocas!
+
+No caso da rede com batch size 10, já não há qualquer melhoria a partir da metade do percurso, apenas algumas oscilações, que eventualmente até pioram o resultado médio. Ou seja, não há porquê continuar treinando a rede ao se passar desse ponto.
+
+Portanto, no caso, o uso de batches é totalmente justificável, e eles cumprem com a sua proposta de reduzir os custos computacionais.
 
 \section{Conclusões}
+
+Com esse trabalho, podemos tirar algumas conclusões sobre redes supervisionadas. Em primeiro lugar, atentamos ao fato de que a mesma característica que molda tantos algoritmos bioinspirados se manifesta prioritariamente em redes neurais: os parâmetros a se resolver, como quantidade de conexões, número de camadas escondidas e tamanho dos batches são definios ou experimentalmente, ou por meio de heurísticas.
+
+Também concluímos a atenção que devemos dar ao usar uma base de dados equilibrada. A base de dados que temos em questão não é equilibrada, por há muito mais exemplos que pertencem a uma categoria do que a outra, o que influencia nas altas taxas de erro que são típicas para esse exemplo. Uma possível melhoria no trabalho seria testar usando um meio de \textit{oversampling} (multiplicação de exemplos que pertencem a uma categoria minoritária para regular a base artificialmente).
 
 \section{Referências}
 

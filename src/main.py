@@ -25,7 +25,7 @@ def main():
     model.add(Dense(7, activation=ACTIVATION_FUNC))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     # treina o modelo
-    history = model.fit(train_data.X, train_data.Y, validation_data=(test_data.X, test_data.Y), epochs=EPOCHS, batch_size=BATCH_SIZE)
+    history = model.fit(train_data.X, train_data.Y, validation_data=(test_data.X, test_data.Y), epochs=(EPOCHS * BATCH_SIZE), batch_size=BATCH_SIZE)
 
     print(history.history.keys())
     plt.plot(history.history['acc'])

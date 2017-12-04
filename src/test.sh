@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 main.py ../tst/yeast_modified.csv normal sigmoid 2 10 150 1
+python3 main.py $1 normal sigmoid 2 10 150 2
