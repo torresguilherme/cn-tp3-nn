@@ -21,18 +21,94 @@
 
 \section{Introdução}
 
+O objetivo do trabalho que segue é fazer uma rede de aprendizado, baseada em algum tipo de redes neurais, para montar um algoritmo que reconheça a localidade de uma proteína dentro da célula de acordo com os parâmetros que são dados. A base de dados é extremamente irregular e as redes costumam ter cerca de 60\% de acurácia.
+
+Como modelo de rede neural, foi escolhido a rede MLP (Multi Layer Perceptron) e foi utilizada a biblioteca Keras, com backend Tensorflow. Para plotar os gráficos com os resultados dos treinos e validações, foi usado o pacote de Python matplotlib. Para executar o programa, é necessário ter esses pacotes e Python 3.5.
+
+Os detalhes sobre as escolhas feitas no algoritmo estão explicadas a seguir.
+
 \section{Implementação}
 
 \subsection{O algoritmo}
 
+Uma rede MLP é uma rede com várias camadas de perceptrons. Perceptrons são modelos de neurônios, que recebem entradas e propagam uma saída. Cada sinapse (como é chamada a conexão) do percetron é atribuída a um peso, que regula a sua influência no perceptron, e esse peso é tipicamente um número de -1 a 1.
+
+O processo de aprendizado da rede consiste em ajustar pesos, até que, para um conjunto de entradas, a MLP consiga produzir saídas próximas das desejadas com uma acurácia desejável. Isso acontece tipicamente nas redes supervisionadas: redes onde se tem um conjunto de saídas esperadas para cada caso de treino e teste.
+
+Esquema geral da execução do programa:
+
+\begin{enumerate}
+	\item Inicializa o algoritmo, recebendo a entrada e convertendo os dados para a rede
+	\item Separa a entrada entre conjunto de treino e conjunto de validação (tipicamente uma relação 67\%-33\%)
+	\item Treina a rede
+	\begin{enumerate}
+		\item Calcula o output final para a entrada
+		\item Atualiza os pesos segundo o erro e a função de perda
+		\item Faz a validação dos resultados
+	\end{enumerate}
+	\item Após acabar o número de iterações: recebe um histórico dos treinos e plota um gráfico segundo as gerações.
+\end{enumerate}
+
 \subsection{Parâmetros do algoritmo}
 
+\subsection*{Função de erro}
+
+Como estamos lidando com um problema de classificação, as backends Tensorflow e Theano oferecem uma função de perda especial para esses casos, a \textit{categorical cross entropy}. A fórmula matemática para ela pode ser encontrada nas referências [1].
+
+Outra opção seria usar uma saída que seria um número inteiro, e considerar cada uma das categorias um número inteiro. Nesse caso, poderia ser usado um \textit{back propagation} com descida do gradiente para atualizar os pesos.
+
+\subsection*{Neurônios nas camadas escondidas}
+
+A quantidade de neurônios nas camadas escondidas, bem como o número delas, é um parâmetro importante de uma rede neural, porque dependendo do número de conexões que é formado, a rede pode não convergir bem, ou até, no caso de muitos, demorar muito para convergir sem que haja uma melhoria significativa no resultado.
+
+Isso é uma decisão complicada e existem várias heurísticas (regras do dedão) para escolher esse parâmetro. Como existem 8 vias de entrada e 7 de saída (para representar as 7 categorias), assumiu-se que a soma dos dois, 15 seria um número adequado para esse parâmtro, porém isso será testado.
+
+\subsection*{Número de camadas escondidas}
+
+Esse parâmetro é semelhante ao outro em vários sentidos, porém sabe-se que redes de deep learning, com um intervalo maior para um treino, podem obter acurácias melhores nos seus testes. Isso também será testado.
+
+\subsection{Outros parâmetros}
+
+Em testes prioritários, que não serão relatados aqui (a maior parte deles não foi completa), uma última gama de padrões foi considerada antes e não houve muitos ajustes posteriores quanto a eles, por diferentes razões.
+
+\subsection*{Inicialização dos pesos}
+
+A inicialização dos pesos fez uma diferença insignificante na rede. As opções oferecidas pelo back-end foram distribuição normal, distribuição uniforme ou zero. A distribuição normal teve uma divergência maior de pesos no início, mas isso logo foi corrigido. Em todos os testes, foi usada a ativação normal.
+
+\subsection*{Função de ativação}
+
+Foi usada a função sigmóide para a ativação dos neurônios em todos os testes que possuíam até 2 camadas escondidas. Para redes mais profundas, é sabido que a ReLu agiliza o processo de aprendizado, portanto, ela foi utilizada.
+
+\subsection*{Épocas de treinamento}
+
+Ao longo das experimentações, concluiu-se que havia um momento a partir de cerca de 100 iterações, a partir do qual tanto os resultados para a validação quanto para o treino atingiam um \textit{plateau} e deixavam de convergir. Como foi previsto anteriormente, isso ocorre próximo aos 60\% de acurácia.
+
+É intuitivo que as redes mais profundas levam mais tempo para convergir até atingir o seu \textit{plateau}, e devido a isso, foram usadas 150 iterações como um limite satisfatório. Isso pode não fazer a rede convergir até o seu estado final, porém a partir dos gráficos é possível reconhecer se ainda há um progresso nesse sentido.
+
 \section{Experimentos}
+
+Os experimentos foram realizados em um computador com sistema operacional Debian 9 unstable, 8GB de memória RAM e processador Pentium G4400 (3.3GHz). Os gráficos foram plotados usando a biblioteca matplotlib. A seguir segue a perda ao longo das iterações e a porcentagem de acurácia do modelo, avaliando-se cada um dos parâmetros.
+
+Uma coisa comum que se observa nos experimentos, entretanto, é que pode haver, durante as fases intermediárias do treino, uma diferença grande entre os acertos no grupo de treino e no grupo de validação, chegando a cerca de 12 pontos percentuais nos piores casos. Porém, isso logo é corrigido, fazendo com que a nova diferença no final das iterações esteja entre 4 e 2 pontos percentuais. Isso é um sinal de que, por mais que seja um problema de classificação complicado, não há muito overfitting nos casos de teste.
+
+Sabendo disso, não foram necessárias mudanças posteriores para resolver overfitting.
+
+\subsection*{Número de neurônios nas camadas escondidas}
+
+\subsection*{Número de camadas escondidas}
+
+\subsection*{Taxa de aprendizagem}
+
+\subsection*{Mini-batches}
 
 \subsection{Resultados e conclusão}
 
 \section{Conclusões}
 
 \section{Referências}
+
+\begin{enumerate}
+	\item \texttt{http://deeplearning.net/software/theano/library/tensor/nnet/nnet.html}
+\end{enumerate}
 
 \end{document}
